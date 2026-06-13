@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Inside My Headspace</title>
+<style>
+    /* Global Reset & Styling */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        margin: 0;
+        font-family: 'Georgia', serif;
+        background: #000000; /* Pure Black */
+        color: #cccccc; /* Aesthetic Soft Grey */
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+    }
+
+    /* Global Kiss & Love Heart Wallpaper Grid */
+    .kiss-wallpaper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='40' fill='%238b1e1e' opacity='0.05' font-size='22'%3E💋%3C/text%3E%3Ctext x='70' y='30' fill='%238b1e1e' opacity='0.05' font-size='16'%3E💋%3C/text%3E%3Ctext x='40' y='90' fill='%238b1e1e' opacity='0.04' font-size='26'%3E💋%3C/text%3E%3Ctext x='90' y='100' fill='%238b1e1e' opacity='0.05' font-size='20'%3E💋%3C/text%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Section Configuration */
+    section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 24px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Typography Upgrades */
+    .big {
+        font-size: 42px;
+        font-weight: 400;
+        letter-spacing: 1.5px;
+        line-height: 1.5;
+        max-width: 900px;
+        color: #e5e5e5;
+    }
+    .small {
+        opacity: 0.6;
+        margin-top: 20px;
+        font-size: 20px;
+        font-style: italic;
+    }
+    h1.headspace-title {
+        font-size: 56px;
+        color: #ffffff;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+        text-transform: lowercase;
+        font-style: italic;
+        text-shadow: 0 0 20px rgba(255, 20, 147, 0.4);
+    }
+
+    /* Premium Button Styles */
+    button {
+        margin-top: 40px;
+        padding: 16px 36px;
+        border: 1px solid #444;
+        border-radius: 30px;
+        background: transparent;
+        color: #cccccc;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 18px;
+        letter-spacing: 1px;
+        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    button:hover {
+        background: #ffffff;
+        color: #000000;
+        border-color: #ffffff;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(255,255,255,0.15);
+    }
+    .red-btn {
+        background: #8b1e1e;
+        color: #ffffff;
+        border: none;
+        box-shadow: 0 4px 15px rgba(139, 30, 30, 0.3);
+    }
+    .red-btn:hover {
+        background: #b32424;
+        color: #ffffff;
+        border-color: transparent;
+        box-shadow: 0 10px 25px rgba(179, 36, 36, 0.5);
+    }
+
+    /* Security Game Container */
+    .quiz-container {
+        background: rgba(15, 15, 15, 0.85);
+        border: 1px solid #222;
+        padding: 40px;
+        border-radius: 20px;
+        max-width: 600px;
+        width: 100%;
+        margin-top: 30px;
+        backdrop-filter: blur(8px);
+    }
+    .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 25px;
+    }
+    .quiz-btn {
+        margin: 0;
+        padding: 14px;
+        font-size: 16px;
+        border-radius: 12px;
+        background: #111;
+        text-align: left;
+    }
+    .quiz-btn:hover {
+        background: #1a1a1a;
+        color: #fff;
+        border-color: #555;
+    }
+
+    /* Colorful Interactive Thoughts Stage */
+    .carousel-stage {
+        position: relative;
+        width: 100%;
+        max-width: 750px;
+        height: 450px;
+        margin-top: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .thought-card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        padding: 40px;
+        border-radius: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transform: scale(0.8) translateY(30px);
+        pointer-events: none;
+        transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+    .thought-card.active {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        pointer-events: auto;
+    }
+    
+    /* Vibrant Color Presets for Thoughts Backgrounds */
+    .bg-pink   { background: linear-gradient(135deg, rgba(255,20,147,0.15), rgba(75,0,130,0.25)); border: 1px solid rgba(255,20,147,0.3); box-shadow: 0 0 40px rgba(255,20,147,0.15); }
+    .bg-purple { background: linear-gradient(135deg, rgba(138,43,226,0.15), rgba(219,112,147,0.2)); border: 1px solid rgba(138,43,226,0.3); box-shadow: 0 0 40px rgba(138,43,226,0.15); }
+    .bg-coral  { background: linear-gradient(135deg, rgba(255,69,0,0.12), rgba(139,0,139,0.25)); border: 1px solid rgba(255,69,0,0.25); box-shadow: 0 0 40px rgba(255,69,0,0.12); }
+    .bg-wine   { background: linear-gradient(135deg, rgba(139,0,0,0.18), rgba(25,25,112,0.3)); border: 1px solid rgba(139,0,0,0.35); box-shadow: 0 0 40px rgba(139,0,0,0.2); }
+
+    .quote-text {
+        font-size: 32px;
+        line-height: 1.5;
+        color: #ffffff;
+        font-weight: 300;
+    }
+    .quote-emoji {
+        display: block;
+        margin-top: 25px;
+        font-size: 26px;
+    }
+
+    /* Carousel Navigation Elements */
+    .carousel-nav-btn {
+        margin-top: 25px;
+        background: #ffffff;
+        color: #000000;
+        font-weight: bold;
+        border: none;
+    }
+    .carousel-counter {
+        margin-top: 15px;
+        font-size: 16px;
+        letter-spacing: 2px;
+        opacity: 0.5;
+    }
+
+    /* Polaroid Image Grid (For Pictures of Just You) */
+    .gallery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 50px;
+        max-width: 1100px;
+    }
+    .polaroid {
+        background: #0d0d0d;
+        padding: 20px;
+        padding-bottom: 35px;
+        border: 1px solid #222;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+        transform: rotate(var(--r));
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        width: 280px;
+    }
+    .polaroid:hover {
+        transform: rotate(0deg) scale(1.08);
+        z-index: 10;
+        border-color: #ff1493;
+        box-shadow: 0 20px 40px rgba(255, 20, 147, 0.25);
+    }
+    .polaroid img {
+        width: 100%;
+        height: 290px;
+        object-fit: cover;
+    }
+    .polaroid .caption {
+        margin-top: 20px;
+        font-size: 16px;
+        font-style: italic;
+        opacity: 0.9;
+        color: #f0f0f0;
+    }
+
+    /* Floating item storm properties */
+    .floating-item {
+        position: absolute;
+        pointer-events: none;
+        z-index: 999;
+        animation: floatUp 4s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    }
+    @keyframes floatUp {
+        0% { transform: translateY(80vh) rotate(0deg); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
+    
+    @media (max-width: 768px) {
+
+    	.carousel-stage {
+        	height: 300px;   /* reduce from 700px */
+        	max-width: 95%;
+    	}
+
+    	.thought-card {
+        	padding: 20px;   /* key fix: removes oversized box feel */
+        	border-radius: 18px;
+    	}
+
+    	.quote-text {
+        	font-size: 20px; /* smaller text */
+        	line-height: 1.4;
+    	}
+
+    	.quote-emoji {
+        	font-size: 14px;
+        	margin-top: 12px;
+    	}
+    }
+    @media (max-width: 768px) {
+    	body {
+        	font-size: 14px;
+    	}
+
+    	.big {
+        	font-size: 30px;
+        	line-height: 1.3;
+    	}
+
+    	.small {
+        	font-size: 16px;
+    	}
+
+    	h1.headspace-title {
+        	font-size: 30px;
+    	}
+
+    	button {
+        	font-size: 15px;
+        	padding: 12px 24px;
+    	}
+    }
+</style>
+</head>
+<body>
+
+<div class="kiss-wallpaper"></div>
+
+<section>
+    <div class="big">Wellllll, well, well, well...</div>
+    <div class="small">what is my man doing here? (✿◡‿◡)</div>
+</section>
+
+<section>
+    <div class="big">does he want to know everything I feel for him??</div>
+    <button class="red-btn" onclick="document.getElementById('interlude').scrollIntoView({behavior:'smooth'})">click if you dare (*￣3￣)╭</button>
+</section>
+
+<section id="interlude">
+    <div class="big">wow, you stayed</div>
+    <div class="small">interesting...</div>
+    <button onclick="document.getElementById('playful-quiz').scrollIntoView({behavior:'smooth'})">continue...</button>
+</section>
+
+<section id="playful-quiz">
+    <div class="big">But wait... a quick security check. ¬_¬</div>
+    <div class="small">Answer correctly to unlock my real mind:</div>
+    
+    <div class="quiz-container">
+        <h3 style="font-size: 24px; color:#fff;">Who owns the absolute monopoly over my heart?</h3>
+        <div class="quiz-options">
+            <button class="quiz-btn" onclick="wrongAnswer(this)">A) Some random attractive actor</button>
+            <button class="quiz-btn" onclick="wrongAnswer(this)">B) Nobody, I am a lone wolf</button>
+            <button class="quiz-btn" onclick="correctAnswer()">C) The amazing handsome boy reading this screen right now</button>
+        </div>
+        <div id="quiz-feedback" class="small" style="margin-top:20px; color:#b32424; min-height: 24px;"></div>
+    </div>
+</section>
+
+<section id="headspace" style="display:none;">
+    <h1 class="headspace-title; font-size: 28px;">You are now officially inside my headspace 🎉</h1>
+    
+    <div class="carousel-stage">
+        
+        <div class="thought-card bg-pink active">
+            <p class="quote-text">You are actually the way my thoughts learned to breathe differently</p>
+            <span class="quote-emoji">(✿◡‿◡)</span>
+        </div>
+
+        <div class="thought-card bg-purple">
+            <p class="quote-text">Even when nothing is happening, something in me is happening because of you</p>
+            <span class="quote-emoji">(._. )</span>
+        </div>
+
+        <div class="thought-card bg-coral">
+            <p class="quote-text">It's strange how someone can become such a presence even when they're not there. And even stranger how their absence can feel louder than their presence ever did</p>
+            <span class="quote-emoji">(>_< )</span>
+        </div>
+
+        <div class="thought-card bg-wine">
+            <p class="quote-text">Nothing else can fill the space you fill</p>
+            <span class="quote-emoji">(^._.^)</span>
+        </div>
+
+        <div class="thought-card bg-pink">
+            <p class="quote-text">Even when everything is going perfectly, if you're not there, something in me refuses to fully settle into happiness</p>
+	    <span class="quote-emoji">`(*>﹏<*)′</span>
+        </div>
+
+        <div class="thought-card bg-purple">
+            <p class="quote-text">But when everything is falling apart, one word from you can soften the entire world again. As if you quietly change the meaning of a bad day just by being part of it</p>
+	    <span class="quote-emoji">`ヾ(≧ ▽ ≦)ゝ′</span>
+        </div>
+
+        <div class="thought-card bg-coral">
+            <p class="quote-text">Even when you made me angry, I still found myself happy. Because being with you - even in disagreement, even in silence - still felt like being connected to something real.</p>
+	    <span class="quote-emoji">（*＾-＾*）</span>
+        </div>
+
+        <div class="thought-card bg-wine">
+            <p class="quote-text">Your words didn't just pass through me. They stayed. Like carvings made into stone, impossible to erase even when time tries</p>
+	    <span class="quote-emoji">ლ(╹◡╹ლ)</span>
+        </div>
+
+        <div class="thought-card bg-pink">
+            <p class="quote-text">Since when did it become possible for a stranger’s son to take up so much space inside a human being?</p>
+	    <span class="quote-emoji">( ~_~)</span>
+        </div>
+
+        <div class="thought-card bg-purple">
+            <p class="quote-text">Jamchobegim, somewhere along the way, you became the place my heart kept returning to, even when I tried to move forward</p>
+	    <span class="quote-emoji">(*^▽^*)</span>
+        </div>
+	
+	<div class="thought-card bg-coral">
+            <p class="quote-text">Or maybe that's because you have already been my half long since I was born</p>
+	    <span class="quote-emoji">\(￣︶￣*\))</span>
+        </div>
+
+
+        <div class="thought-card bg-wine" id="final-tease-card">
+            <p class="quote-text" style="color: #ffb6c1; font-weight: bold;">Maybe my words end here, but what my heart wants to tell you never really will, hehehe... <3</p>
+            <span class="quote-emoji">✨ Aishteru, my handsome man ✨</span>
+        </div>
+
+    </div>
+
+    <button class="carousel-nav-btn" onclick="nextThought()">read next →</button>
+    <div class="carousel-counter" id="thought-counter">1 / 12</div>
+
+    <button id="reward-btn" onclick="revealGallery()" style="display:none; margin-top: 50px;" class="red-btn">one more reward for today...</button>
+</section>
+
+<section id="gallery-section" style="display:none;">
+    <div class="big" style="font-size: 25px; color:#fff; text-shadow: 0 0 15px rgba(255,20,147,0.4);">your reward （￣︶￣）↗　</div>
+    <div class="small" style="font-size: 15px; margin-bottom: 30px;">just a reminder of who you belong to...</div>
+    
+    <div class="gallery">
+        <div class="polaroid" style="--r: -4deg;">
+            <img src="https://i.pinimg.com/736x/00/6a/d2/006ad24cf36fd0882da9740e47d941e5.jpg" alt="Photo of Me">
+            <div class="caption">your favorite girl. 🎀</div>
+        </div>
+
+        <div class="polaroid" style="--r: 3deg;">
+            <img src="https://i.pinimg.com/736x/08/65/93/08659395edb1d55f7d8871a6abe1dd9d.jpg" alt="Photo of Me">
+            <div class="caption">thinking about you here... 💭</div>
+        </div>
+
+        <div class="polaroid" style="--r: -2deg;">
+            <img src="https://i.pinimg.com/736x/66/f6/a8/66f6a8530dcd9d101511c0f90aa87081.jpg" alt="Photo of Me">
+            <div class="caption">all yours, remember? 😽</div>
+        </div>
+    </div>
+</section>
+
+<script>
+let currentIdx = 0;
+const cards = document.querySelectorAll('.thought-card');
+const counterDisplay = document.getElementById('thought-counter');
+const nextBtn = document.querySelector('.carousel-nav-btn');
+const rewardBtn = document.getElementById('reward-btn');
+
+// Quiz interactions control logic structure
+function wrongAnswer(btn) {
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.style.color = '#b32424';
+    feedback.innerHTML = "Wrong answer! Try again, or I'm calling the relationship police. 🏹";
+    btn.style.borderColor = '#b32424';
+}
+
+function correctAnswer() {
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.style.color = '#4caf50';
+    feedback.innerHTML = "Yeayy, correct! Headspace unlocked successfully. Accessing thoughts... 🔓";
+    
+    document.getElementById('headspace').style.display = 'flex';
+    
+    setTimeout(() => {
+        document.getElementById('headspace').scrollIntoView({behavior:'smooth'});
+    }, 1200);
+}
+
+// Interactive Thought Deck Slider logic transitions setup
+function nextThought() {
+    cards[currentIdx].classList.remove('active');
+    currentIdx++;
+
+    if (currentIdx < cards.length) {
+        cards[currentIdx].classList.add('active');
+        counterDisplay.innerText = `${currentIdx + 1} / ${cards.length}`;
+        
+        // If we reach the teasing mission complete card, swap buttons
+        if (currentIdx === cards.length - 1) {
+            nextBtn.style.display = 'none';
+            rewardBtn.style.display = 'inline-block';
+        }
+    }
+}
+
+// Reveal final custom profile picture layout view 
+function revealGallery() {
+    const gallery = document.getElementById('gallery-section');
+    gallery.style.display = 'flex';
+
+    setTimeout(() => {
+        gallery.scrollIntoView({ behavior: 'smooth' });
+    }, 150);
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            launchHearts();
+            observer.disconnect();
+        }
+    }, { threshold: 0.4 });
+
+    observer.observe(gallery);
+}
+function launchHearts() {
+    for (let i = 0; i < 45; i++) {
+        setTimeout(() => {
+            let d = document.createElement('div');
+            d.className = 'floating-item';
+            d.innerHTML = Math.random() > 0.5 ? '💋' : '♡';
+
+            // spawn near current scroll position instead of fixed viewport
+            d.style.top = (window.scrollY + window.innerHeight - 100) + 'px';
+            d.style.left = Math.random() * 100 + 'vw';
+
+            d.style.fontSize = (22 + Math.random() * 32) + 'px';
+            d.style.animationDuration = (2 + Math.random() * 2) + 's';
+
+            document.body.appendChild(d);
+
+            setTimeout(() => d.remove(), 4000);
+        }, i * 60);
+    }
+}
+</script>
+
+</body>
+</html>
